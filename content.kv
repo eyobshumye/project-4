@@ -1,0 +1,340 @@
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
+#:import MDIconButton kivymd.uix.button.MDIconButton
+#:import MDNavigationLayout kivymd.uix.navigationdrawer.MDNavigationLayout
+#:import MDNavigationDrawer kivymd.uix.navigationdrawer.MDNavigationDrawer
+#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+
+
+ScreenManager:
+    LoginScreen:
+    ProjectListScreen:
+    FormUploadScreen:
+    CameraScreen:
+    ShowImageScreen:
+
+
+<LoginScreen>:
+    name: 'login'
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '10dp'
+        padding: '20dp'
+        size_hint: None, None
+        size: '300dp', '400dp'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+
+        Image:
+            size_hint: None, None
+            size: '100dp', '100dp'
+            pos_hint: {"center_x": 0.5}
+            canvas:
+                Ellipse:
+                    size: self.size
+                    pos: self.pos
+                    source: 'logo.jpg'
+
+        Label:
+            text: 'Welcome to Key Construction'
+            font_size: '18sp'
+            color: 0, 0, 0, 1
+            align: 'center'
+
+        MDTextField:
+            id: username_input
+            hint_text: "Username"
+            icon_left: "account"
+            size_hint_x: None
+            width: "250dp"
+            mode: "round"
+            line_color_normal: 0, 0, 0, 1
+            line_color_focus: app.theme_cls.primary_color
+
+        MDTextField:
+            id: password_input
+            hint_text: "Password"
+            helper_text: "Enter your password"
+            icon_left: "lock"
+            password: True
+            size_hint_x: None
+            width: "250dp"
+            mode: "round"
+            line_color_normal: 0, 0, 0, 1
+            line_color_focus: app.theme_cls.primary_color
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: '10dp'
+            size_hint_x: None
+            width: dp(120)
+            padding: [0, 5]
+
+            MDCheckbox:
+                id: show_password_checkbox
+                size_hint: None, None
+                width: dp(48)
+                height: dp(48)
+                on_active: password_input.password = not self.active
+                pos_hint: {"center_y": 0.5}
+
+            Label:
+                text: "Show Password"
+                color: 0, 0, 0, 1
+                pos_hint: {"center_y": 0.5}
+
+        MDRaisedButton:
+            text: "Login"
+            size_hint: None, None
+            width: "250dp"
+            height: "48dp"
+            pos_hint: {"center_x": 0.8}
+            on_release: root.login()
+
+<DrawerClickableItem@MDNavigationDrawerItem>:
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+<DrawerLabelItem@MDNavigationDrawerItem>:
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
+    
+<ProjectListScreen>:
+    name: 'project_list'
+
+    on_pre_enter: root.populate_project_list()
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: 'Project List'
+            left_action_items: [["menu", lambda x: nav_drawer_project_list.set_state("open")]]
+            right_action_items: [["account", lambda x: app.show_user_profile()]]
+
+
+        ScrollView:
+            MDList:
+                id: project_list
+
+    MDNavigationDrawer:
+        id: nav_drawer_project_list
+        orientation: 'vertical'
+
+        MDNavigationDrawerMenu:
+
+            MDNavigationDrawerHeader:
+                text: "Header text"
+                spacing: "4dp"
+                padding: "12dp", 0, 0, "56dp"
+
+            MDNavigationDrawerLabel:
+                text: "Mail"
+                
+            DrawerLabelItem:
+                icon: "information-outline"
+                text: "Label"
+
+            MDNavigationDrawerDivider:
+                
+            MDNavigationDrawerLabel:
+                text: "Labels"
+                
+            DrawerClickableItem:
+                icon: "home"
+                #right_text: "+99"
+                text_right_color: "#4a4939"
+                text: "Home"
+                
+            DrawerClickableItem:
+                icon: "logout"
+                text: "Logout"
+                
+            
+
+            
+
+            
+
+<FormUploadScreen>:
+    name: 'form_upload'
+
+    MDTopAppBar:
+        title: 'Form Upload'
+        left_action_items: [["menu", lambda x: nav_drawer_form_upload.set_state("open")]]
+        right_action_items: [["account", lambda x: app.show_user_profile()]]
+        pos_hint: {'top': 1}
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '10dp'
+        padding: '20dp'
+        size_hint: None, None
+        size: '300dp', '400dp'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+        MDTextField:
+            id: project_code_input
+            hint_text: "Project Code"
+            size_hint_x: None
+            width: "250dp"
+
+        MDTextField:
+            id: project_description_input
+            hint_text: "Description"
+            size_hint_x: None
+            width: "250dp"
+
+        MDRaisedButton:
+            text: 'Open Camera'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.open_camera()
+
+        Image:
+            id: captured_image
+            source: ""
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            pos_hint: {'center_x': 0.5}
+
+            MDRaisedButton:
+                text: "Back"
+                size_hint: None, None
+                width: "200dp"
+                height: "48dp"
+                pos_hint: {"center_x": 0.9}
+                on_release: root.manager.current = 'project_list'
+
+            Widget:
+                size_hint_x: None
+                width: "100dp"
+
+            MDRaisedButton:
+                text: "Submit"
+                size_hint: None, None
+                width: "200dp"
+                height: "48dp"
+                pos_hint: {"center_x": 0.1}
+                on_release: root.submit_data()
+
+    MDNavigationDrawer:
+        id: nav_drawer_form_upload
+        orientation: 'vertical'
+
+        MDNavigationDrawerMenu:
+
+            MDNavigationDrawerHeader:
+                text: "Header text"
+                spacing: "4dp"
+                padding: "12dp", 0, 0, "56dp"
+
+            MDNavigationDrawerLabel:
+                text: "User Info"
+                
+            DrawerLabelItem:
+                icon: "account"
+                text: "Name"
+                center_text: "Eyob Shumye"
+            DrawerLabelItem:
+                icon: "account-hard-hat"
+                text: "Position"
+                center_text: "CEO"
+
+            MDNavigationDrawerDivider:
+                
+            MDNavigationDrawerLabel:
+                text: "Settings"
+                
+            DrawerClickableItem:
+                icon: "home"
+                #right_text: "+99"
+                text_right_color: "#4a4939"
+                text: "Home"
+                
+            DrawerClickableItem:
+                icon: "logout"
+                text: "Logout"
+
+
+
+
+
+<CameraScreen>:
+    name: 'camera_screen'
+
+    MDScreen:
+        Camera:
+            id: camera
+            resolution: (1000, 500)
+            play: True
+            pos_hint: {'x': 0, 'center_y': 0.9}
+
+        MDRaisedButton:
+            text: 'Back TO'
+            pos_hint: {'x': 0.2, 'center_y': 0.1}
+            on_release: root.manager.current = 'form_upload'
+
+        MDRaisedButton:
+            text: 'Capture'
+            pos_hint: {'x': 0.7, 'center_y': 0.1}
+            on_release:
+                root.capture_image()
+                root.manager.current = 'show_image'
+
+<ShowImageScreen>:
+    name: 'show_image'
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: 'Show Image'
+            left_action_items: [["arrow-left", lambda x: app.go_to_previous_screen()]]
+            pos_hint: {'top': 1}
+
+        FloatLayout:
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: '10dp'
+                padding: '10dp'
+                size_hint: None, None
+                size: "400dp", "500dp"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                Image:
+                    id: image
+                    size_hint: None, None
+                    padding: '10dp'
+                    size: "370dp", "500dp"
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: "48dp"
+                    spacing: '20dp'
+                    padding: '20dp'
+                    pos_hint: {'center_x': 0.5}
+
+                    MDRaisedButton:
+                        text: "Discard"
+                        size_hint_x: None
+                        width: "120dp"
+                        on_release: root.discard_image()
+
+                    Widget:
+                        size_hint_x: None
+                        width: "100dp"
+
+                    MDRaisedButton:
+                        text: "Keep"
+                        size_hint_x: None
+                        width: "120dp"
+                        on_release: root.keep_image()
